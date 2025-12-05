@@ -1,0 +1,32 @@
+================================================================================
+                    JAVA SE 17 DEVELOPER CERTIFICATE
+================================================================================
+
+Certification Name: Oracle Certified Associate Java SE 17 Developer
+Issued To: AtHiL
+Issued Date: December 2025
+
+This is to certify that the above named individual has successfully demonstrated
+the technical knowledge and skills required to be recognized as an Oracle 
+Certified Associate Java SE 17 Developer.
+
+Credential ID: [Your Credential ID]
+Verification Link: https://www.credly.com/
+
+Skills Validated:
+- Object-Oriented Programming concepts
+- Java SE 17 language features
+- Working with Collections and Generics
+- Exception handling and debugging
+- Stream API and Functional Interfaces
+- JDBC and Database connectivity
+
+This certificate represents professional achievement and commitment to continuous
+learning in Java development.
+
+================================================================================
+For verification, visit: https://www.credly.com/
+================================================================================
+
+NOTE: This is a text representation of your certificate.
+For the official PDF certificate, please download from Oracle's certification portal.

@@ -219,7 +219,7 @@ if (contactForm) {
 }
 
 /* ============================================
-   RESUME DOWNLOAD
+   RESUME & CERTIFICATE DOWNLOAD
    ============================================ */
 
 function downloadResume() {
@@ -264,6 +264,50 @@ function downloadResume() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+}
+
+/* ============================================
+   CERTIFICATE DOWNLOAD
+   ============================================ */
+
+function downloadCertificate(certName) {
+    // Try to download certificate - first try .pdf, then .txt
+    let certPath = `assets/certificates/${certName}.pdf`;
+    let fileName = `${certName}.pdf`;
+    
+    // If PDF doesn't exist, try TXT version
+    const tryDownload = (path, name) => {
+        fetch(path)
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('File not found');
+                }
+            })
+            .then(blob => {
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = name;
+                document.body.appendChild(link);
+                link.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+            })
+            .catch(() => {
+                // If PDF fails, try TXT
+                if (path.endsWith('.pdf')) {
+                    tryDownload(`assets/certificates/${certName}.txt`, `${certName}.txt`);
+                } else {
+                    // Both failed, show error
+                    alert(`Certificate file not found.\n\nTo enable downloads, please:\n1. Save your certificate as ${certName}.pdf\n2. Place it in: assets/certificates/\n\nOr email me for certificate details.`);
+                }
+            });
+    };
+    
+    tryDownload(certPath, fileName);
 }
 
 /* ============================================

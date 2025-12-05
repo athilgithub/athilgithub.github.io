@@ -1,0 +1,34 @@
+================================================================================
+                    MONGODB DEVELOPER CERTIFICATE
+================================================================================
+
+Certification Name: MongoDB Certified Developer Associate
+Issued To: AtHiL
+Issued Date: December 2025
+
+This certificate recognizes the achievement of the individual named above who has
+successfully completed the MongoDB Developer Associate certification exam and
+demonstrated proficiency in MongoDB database development.
+
+Credential ID: [Your Credential ID]
+Verification Link: https://university.mongodb.com/
+
+Skills Validated:
+- MongoDB Document Model and Data Structure
+- BSON Data Types and Encoding
+- MongoDB Query Language (MQL)
+- Aggregation Pipeline
+- Indexing and Query Optimization
+- Replication and Sharding
+- Application Development with MongoDB
+- Atlas Administration
+
+The MongoDB Certified Developer Associate credential acknowledges your expertise
+in designing, building, and maintaining MongoDB applications.
+
+================================================================================
+For verification, visit: https://university.mongodb.com/
+================================================================================
+
+NOTE: This is a text representation of your certificate.
+For the official certificate, please download from MongoDB University.
