@@ -420,7 +420,12 @@
     <div id="resumeModal" class="video-modal">
         <div class="video-modal-content">
             <span class="video-close" onclick="closeResumeModal()">&times;</span>
-            <iframe id="resumeFrame" src="about:blank" title="Resume Viewer" class="resume-iframe"></iframe>
+            <div class="resume-container">
+                <iframe id="resumeFrame" src="about:blank" title="Resume Viewer" class="resume-iframe"></iframe>
+                <a href="assets/resume.pdf" download class="resume-download-btn">
+                    <i class="fas fa-download"></i> Download Resume
+                </a>
+            </div>
         </div>
     </div>
 
