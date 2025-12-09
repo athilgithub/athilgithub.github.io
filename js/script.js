@@ -189,32 +189,31 @@ if (contactForm) {
 
         // Get form values
         const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
-
-        // Validate form
-        if (!data.name || !data.email || !data.subject || !data.message) {
-            alert('Please fill in all fields');
-            return;
-        }
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const subject = formData.get('subject');
+        const message = formData.get('message');
 
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(data.email)) {
+        if (!emailRegex.test(email)) {
             alert('Please enter a valid email address');
             return;
         }
 
-        // Show success message
-        alert('Thank you for your message! I will get back to you soon.');
-        contactForm.reset();
+        // Create mailto link with form data
+        const mailtoLink = `mailto:athils.23cse@kongu.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+            `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+        )}`;
 
-        // In a real application, you would send this data to your backend
-        // Example using fetch:
-        // fetch('your-backend-endpoint', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(data)
-        // })
+        // Open default email client
+        window.location.href = mailtoLink;
+
+        // Show success message
+        setTimeout(() => {
+            alert('Your default email client should open. If not, please email me directly at athils.23cse@kongu.edu');
+            contactForm.reset();
+        }, 500);
     });
 }
 
@@ -223,47 +222,38 @@ if (contactForm) {
    ============================================ */
 
 function downloadResume() {
-    // Create a sample resume PDF or document
-    // For now, this shows an alert. In production, link to your actual resume file.
-    
-    // Option 1: Direct link to a resume file
-    // window.location.href = 'assets/resume.pdf';
-    
-    // Option 2: Using blob (for demonstration)
-    const cvContent = `
-    MY RESUME
-    ==========
-    
-    Name: Your Name
-    Email: your.email@example.com
-    Phone: +1 (555) 123-4567
-    
-    PROFESSIONAL SUMMARY
-    A skilled full-stack developer with expertise in modern web technologies.
-    
-    EXPERIENCE
-    Senior Developer at Company (2022-Present)
-    Developer at Previous Company (2020-2022)
-    
-    SKILLS
-    React, Node.js, MongoDB, JavaScript, CSS, HTML
-    
-    EDUCATION
-    Bachelor's Degree in Computer Science
-    University Name (2020)
-    
-    CERTIFICATIONS
-    AWS Certified Cloud Practitioner
-    Full Stack Web Development Certificate
-    `;
-    
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(cvContent));
-    element.setAttribute('download', 'Resume.txt');
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    const resumePath = 'assets/resume.pdf';
+    const fallbackPath = 'assets/resume.txt';
+
+    const triggerDownload = (blob, filename) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+    };
+
+    // Try PDF first, then TXT fallback, else show guidance
+    fetch(resumePath)
+        .then(res => {
+            if (!res.ok) throw new Error('pdf-missing');
+            return res.blob();
+        })
+        .then(blob => triggerDownload(blob, 'AtHiL_Resume.pdf'))
+        .catch(() => {
+            fetch(fallbackPath)
+                .then(res => {
+                    if (!res.ok) throw new Error('txt-missing');
+                    return res.blob();
+                })
+                .then(blob => triggerDownload(blob, 'AtHiL_Resume.txt'))
+                .catch(() => {
+                    alert('Resume file not found. Please place your resume at assets/resume.pdf (or resume.txt) to enable downloads.');
+                });
+        });
 }
 
 /* ============================================
@@ -349,6 +339,103 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+/* ============================================
+   VIDEO MODAL FUNCTIONS
+   ============================================ */
+
+function openVideoModal(videoSrc) {
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('modalVideo');
+    const source = document.getElementById('videoSource');
+    
+    // Clear previous sources
+    source.src = videoSrc;
+    
+    // Force reload
+    video.load();
+    
+    modal.style.display = 'block';
+    
+    // Try to play, with error handling
+    const playPromise = video.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.log('Video autoplay prevented:', error);
+        });
+    }
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('modalVideo');
+    
+    modal.style.display = 'none';
+    video.pause();
+    video.currentTime = 0;
+    
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside the video
+window.onclick = function(event) {
+    const modal = document.getElementById('videoModal');
+    if (event.target === modal) {
+        closeVideoModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeVideoModal();
+        closeResumeModal();
+    }
+});
+
+/* ============================================
+   RESUME MODAL FUNCTIONS
+   ============================================ */
+
+function openResumeModal() {
+    const modal = document.getElementById('resumeModal');
+    const iframe = document.getElementById('resumeFrame');
+    
+    iframe.src = 'assets/resume.pdf';
+    modal.style.display = 'block';
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeResumeModal() {
+    const modal = document.getElementById('resumeModal');
+    const iframe = document.getElementById('resumeFrame');
+    
+    modal.style.display = 'none';
+    iframe.src = 'about:blank';
+    
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const videoModal = document.getElementById('videoModal');
+    const resumeModal = document.getElementById('resumeModal');
+    
+    if (event.target === videoModal) {
+        closeVideoModal();
+    }
+    if (event.target === resumeModal) {
+        closeResumeModal();
+    }
+});
 
 // Add any additional custom functionality here
 console.log('Portfolio loaded successfully!');
